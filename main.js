@@ -35,13 +35,17 @@ function setFramesData(duration)
   document.getElementById('framesTimeline').data = framesData;
 }
 
+let traceDuration = 1500;
+document.getElementById('traceDurationSliderValue').innerText=traceDuration;
+document.getElementById('traceDurationSlider').value = traceDuration;
+
 function setData()
 {
   //const traceDuration = 200 + Math.random() * 3 * 3600 * 1000; // Max is 3h
-  const traceDuration = 200 + Math.random() * 3 * 60 * 1000;
+  //const traceDuration = 200 + Math.random() * 3 * 60 * 1000;
 
   document.getElementById('brushtimeline').end = traceDuration;
-  document.getElementById('traceDuration').innerText = Math.round(traceDuration).toString(10);
+  document.getElementById('traceDurationIndicator').innerText = Math.round(traceDuration).toString(10);
 
   setCpuData(traceDuration);
   setFramesData(traceDuration);
@@ -49,6 +53,5 @@ function setData()
 
 setTimeout(setData, 200);
 
-document.getElementById('newTraceData').addEventListener('click', setData);
-
+// document.getElementById('newTraceData').addEventListener('click', setData);
 //setTimeout(setData, 500);
