@@ -18,12 +18,10 @@ class BrushTimeline extends HTMLElement {
       left: this.getAttribute('paddingLeft')
     };
     const brushEventName = this.getAttribute('brushEventName');
-    const start = parseInt(this.getAttribute('start'));
-    const end = parseInt(this.getAttribute('end'));
+    this.start = parseInt(this.getAttribute('start'));
+    this.end = parseInt(this.getAttribute('end'));
     const brushStart = parseInt(this.getAttribute('brushStart'));
     const brushEnd = parseInt(this.getAttribute('brushEnd'));
-
-
 
     ///////////////////////////////////////////////////////////////
     let width = this.getAttribute('width');
@@ -66,18 +64,18 @@ class BrushTimeline extends HTMLElement {
 
     const d3loaded = () =>
     {
-      const x = d3.scaleTime().range([margin.left, width - margin.right]);
-      const xAxis = d3.axisBottom(x);
+      console.log(this);
+      this.x = d3.scaleTime().range([margin.left, width - margin.right]);
+      this.x.domain([this.start, this.end]);
 
+      this.xAxis = d3.axisBottom(this.x);
 
-      x.domain([start, end]);
-
-      const brush = d3.brushX()
+      this.brush = d3.brushX()
           .extent([[0,0], [width , height - margin.bottom ]])
           .on("brush end", () =>
           {
-            const start = x.invert(+d3.event.selection[0]);
-            const end = x.invert(+d3.event.selection[1]);
+            const start = this.x.invert(+d3.event.selection[0]);
+            const end = this.x.invert(+d3.event.selection[1]);
 
             this.dispatchEvent(new CustomEvent(brushEventName, { detail: [start, end]}));
           });
@@ -86,22 +84,62 @@ class BrushTimeline extends HTMLElement {
       const context = d3.select(svgEl);
 
 
-      context.append("g")
+      this.axisEl = context.append("g")
           .attr("class", "axis axis--x")
-          .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-          .call(xAxis);
+          .attr("transform", "translate(0," + (height - margin.bottom) + ")");
 
-      const brushEl = context.append("g")
+      this.axisEl
+          .call(this.xAxis);
+
+      this.brushEl = context.append("g")
           .attr("class", "brush");
 
-      brushEl
-          .call(brush)
-          .call(brush.move, [x(brushStart), x(brushEnd)]);
+      this.brushEl
+          .call(this.brush)
+          .call(this.brush.move, [this.x(brushStart), this.x(brushEnd)]);
     };
 
-    d3script.onload = d3loaded;
+    d3script.onload = () => { d3loaded(); };
     shadow.appendChild(d3script);
 
+  }
+
+  updateVis()
+  {
+    if(this.x)
+    {
+      this.x.domain([this.start, this.end]);
+      //this.xAxis = d3.axisBottom(this.x);
+
+      this.axisEl
+          .call(this.xAxis);
+
+      const brushStart = parseInt(this.getAttribute('brushStart'));
+      const brushEnd = parseInt(this.getAttribute('brushEnd'));
+      this.brushEl
+          .call(this.brush.move, [this.x(brushStart), this.x(brushEnd)]);
+    }
+  }
+
+  get start()
+  {
+    return parseInt(this.getAttribute('start'));
+  }
+
+  set start(start)
+  {
+    this.setAttribute('start', start);
+  }
+
+  get end()
+  {
+    return parseInt(this.getAttribute('end'));
+  }
+
+  set end(end)
+  {
+    this.setAttribute('end', end);
+    this.updateVis();
   }
 }
 

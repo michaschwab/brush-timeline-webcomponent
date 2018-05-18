@@ -1,5 +1,5 @@
-class CpuTimeline extends HTMLElement {
-
+class FramesTimeline extends HTMLElement
+{
   createSvgEl(elName)
   {
     return document.createElementNS('http://www.w3.org/2000/svg', elName);
@@ -28,6 +28,7 @@ class CpuTimeline extends HTMLElement {
     this.height = bcr.height;
 
     const style = document.createElement('style');
+    style.textContent = 'rect {opacity: 0.1}';
 
     shadow.appendChild(style);
   }
@@ -43,29 +44,57 @@ class CpuTimeline extends HTMLElement {
     // Updating Scales
     const start = +this.getAttribute('start');
     const end = +this.getAttribute('end');
+
     this.x = (time) => { return (time - start) / (end - start)* this.width };
-    this.y = (cpu) => { return this.height - cpu * this.height };
 
     // Adding new data
-    let d = 'M';
 
-    for(const dataPoint of this.cpudata)
+    if(end - start < 2000)
     {
-      d += this.x(dataPoint.time) +  ' ' + this.y(dataPoint.cpu) + ' L';
+      for(const frame of this.framedata)
+      {
+        const circle = this.createSvgEl('circle');
+        circle.setAttribute('r', 5);
+        circle.setAttribute('cy', this.height / 2);
+        circle.setAttribute('cx', this.x(frame));
+        circle.setAttribute('fill', '#d70');
+
+        this.svgEl.appendChild(circle);
+      }
     }
-    d = d.substr(0, d.length - 1);
+    else
+    {
+      // Have to sample first
+      const rate = (this.end - this.start) / this.width; // Move about 1px per sample
 
-    const path = this.createSvgEl('path');
-    path.setAttribute('d', d);
-    path.setAttribute('stroke', '#d70');
-    path.setAttribute('fill', 'none');
+      const sampled = [];
 
-    this.svgEl.appendChild(path);
+      for(let time = this.start; time < this.end; time += rate)
+      {
+        const count = this.framedata.filter(t => t >= time && t <= time + rate).length;
+        sampled.push({count: count, time: time});
+      }
+
+      const max = Math.max.apply(null, sampled.map(s => s.count));
+
+      for(let sample of sampled)
+      {
+        const rect = this.createSvgEl('rect');
+        rect.setAttribute('width', 3);
+        rect.setAttribute('height', this.height - 8);
+        rect.setAttribute('x', this.x(sample.time)-1);
+        rect.setAttribute('fill', '#d70');
+
+        this.svgEl.appendChild(rect);
+
+        rect.style.opacity = (sample.count / max).toString(10);
+      }
+    }
   }
 
   set data(data)
   {
-    this.cpudata = data;
+    this.framedata = data;
 
     this.redraw();
   }
@@ -91,4 +120,4 @@ class CpuTimeline extends HTMLElement {
   }
 }
 
-customElements.define('cpu-timeline', CpuTimeline);
+customElements.define('frames-timeline', FramesTimeline);
