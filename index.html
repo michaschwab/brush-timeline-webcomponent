@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Brush Timeline As Web Component</title>
+</head>
+<body>
+<h1>Brush Timeline As Web Component</h1>
+
+<brush-timeline id="brusher" width="100%" height="200" start="0" end="1000" brushStart="200" brushEnd="500" brushEventName="brushed" paddingTop="10" paddingRight="20" paddingBottom="20" paddingLeft="20">
+
+  <cpu-timeline width="100%" height="100" data="cpu" id="cpuTimeline" start="0" end="1000"></cpu-timeline>
+  <frames-as-dots-timeline width="100%" height="70" data="frames" start="0" end="1000" dataChangedCount="0" id="framesTimeline"></frames-as-dots-timeline>
+
+</brush-timeline>
+
+<script src="main.js"></script>
+
+<script src="brush-timeline.js"></script>
+<script src="cpu-timeline.js"></script>
+<script src="frames-as-dots-timeline.js"></script>
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+
+</body>
+</html>
+
+
