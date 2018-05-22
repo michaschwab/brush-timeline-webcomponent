@@ -8,13 +8,6 @@
 <body>
 <h1>Brush Timeline As Web Component: <span id="traceDurationIndicator"></span>ms Trace</h1>
 
-<brush-timeline id="brushtimeline" width="100%" height="200" start="0" end="1000" brushStart="200" brushEnd="500" brushEventName="brushed" paddingTop="10" paddingRight="20" paddingBottom="20" paddingLeft="20">
-
-  <cpu-timeline width="100%" height="100" data="cpu" start="0" end="1000" id="cpuTimeline"></cpu-timeline>
-  <frames-timeline width="100%" height="70" data="frames" start="0" end="1000" dataChangedCount="0" id="framesTimeline"></frames-timeline>
-
-</brush-timeline>
-
 Trace Duration:
 <div class="slidecontainer" style="width: 1000px; display: inline-block">
   <input type="range" min="200" max="30000000" class="slider" id="traceDurationSlider" oninput="traceDuration=this.value;document.getElementById('traceDurationSliderValue').innerText=traceDuration;requestAnimationFrame(setData)" />
@@ -23,10 +16,20 @@ Trace Duration:
 
 <br />
 
+<h2>Overview CPU and Frames Timeline with Brush</h2>
+
+<brush-timeline id="brushtimeline" width="100%" height="200" start="0" end="1000" brushStart="200" brushEnd="500" brushEventName="brushed" paddingTop="10" paddingRight="20" paddingBottom="20" paddingLeft="20">
+
+  <cpu-timeline width="100%" height="100" data="cpu" start="0" end="1000" id="cpuTimeline"></cpu-timeline>
+  <frames-timeline width="100%" height="70" data="frames" start="0" end="1000" dataChangedCount="0" id="framesTimeline"></frames-timeline>
+
+</brush-timeline>
+
+
+<h2>Detail Timeline</h2>
 
 <detail-timeline id="detail-timeline" start="200" end="500" width="100%" height="200" paddingTop="10" paddingRight="20" paddingBottom="20" paddingLeft="20"></detail-timeline>
 
-<!--<button id="newTraceData">New Random Trace Data</button>-->
 
 <script src="main.js"></script>
 

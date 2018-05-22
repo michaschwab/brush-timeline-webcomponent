@@ -1,11 +1,10 @@
 document.getElementById('brushtimeline').addEventListener('brushed', function(event)
 {
-  const startEnd = event.detail;
-  const start = startEnd[0];
-  const end = startEnd[1];
+  const start = event.detail[0];
+  const end = event.detail[1];
 
   setDetailData(start, end);
-  //console.log('received start and end of brush in main context: ' + startEnd);
+  //console.log('received start and end of brush in main context: ', start, end);
 });
 
 function setDetailData(start, end)
@@ -33,6 +32,7 @@ function setFramesData(duration)
   const framesData = [];
   const frameMin = 6;
   const frameMax = 30;
+
   const getRandomFrame = () => frameMin + Math.random() * (frameMax - frameMin);
 
   for(let time = getRandomFrame(); time < duration; time += getRandomFrame())
@@ -44,9 +44,6 @@ function setFramesData(duration)
   document.getElementById('framesTimeline').data = framesData;
 }
 
-let traceDuration = 1500;
-document.getElementById('traceDurationSliderValue').innerText=traceDuration;
-document.getElementById('traceDurationSlider').value = traceDuration;
 
 function setData()
 {
@@ -60,7 +57,9 @@ function setData()
   setFramesData(traceDuration);
 }
 
-setTimeout(setData, 200);
 
-// document.getElementById('newTraceData').addEventListener('click', setData);
-//setTimeout(setData, 500);
+let traceDuration = 1500;
+document.getElementById('traceDurationSliderValue').innerText = traceDuration.toString(10);
+document.getElementById('traceDurationSlider').value = traceDuration;
+
+document.body.onload = setData;
