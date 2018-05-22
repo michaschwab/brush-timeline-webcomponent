@@ -16,12 +16,16 @@
 </brush-timeline>
 
 Trace Duration:
-<div class="slidecontainer" style="width: 800px; display: inline-block">
-  <input type="range" min="200" max="300000" class="slider" id="traceDurationSlider" oninput="traceDuration=this.value;document.getElementById('traceDurationSliderValue').innerText=traceDuration;requestAnimationFrame(setData)" />
+<div class="slidecontainer" style="width: 1000px; display: inline-block">
+  <input type="range" min="200" max="30000000" class="slider" id="traceDurationSlider" oninput="traceDuration=this.value;document.getElementById('traceDurationSliderValue').innerText=traceDuration;requestAnimationFrame(setData)" />
 </div>
 <span id="traceDurationSliderValue"></span>ms
 
 <br />
+
+
+<detail-timeline id="detail-timeline" start="200" end="500" width="100%" height="200" paddingTop="10" paddingRight="20" paddingBottom="20" paddingLeft="20"></detail-timeline>
+
 <!--<button id="newTraceData">New Random Trace Data</button>-->
 
 <script src="main.js"></script>
@@ -29,6 +33,7 @@ Trace Duration:
 <script src="brush-timeline.js"></script>
 <script src="cpu-timeline.js"></script>
 <script src="frames-timeline.js"></script>
+<script src="detail-timeline.js"></script>
 
 <script src="https://d3js.org/d3.v4.min.js"></script>
 

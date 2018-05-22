@@ -1,9 +1,18 @@
 document.getElementById('brushtimeline').addEventListener('brushed', function(event)
 {
   const startEnd = event.detail;
+  const start = startEnd[0];
+  const end = startEnd[1];
 
-  console.log('received start and end of brush in main context: ' + startEnd);
+  setDetailData(start, end);
+  //console.log('received start and end of brush in main context: ' + startEnd);
 });
+
+function setDetailData(start, end)
+{
+  document.getElementById('detail-timeline').start = start;
+  document.getElementById('detail-timeline').end = end;
+}
 
 function setCpuData(duration)
 {
