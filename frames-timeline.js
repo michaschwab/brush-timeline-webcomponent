@@ -65,15 +65,14 @@ class FramesTimeline extends HTMLElement
     else
     {
       // Have to sample first
-      const rate = (this.end - this.start) / this.width; // Move about 1px per sample
 
-      const sampled = [];
-
+      /* This is O(n^2) and too slow
       for(let time = this.start; time < this.end; time += rate)
       {
         const count = this.framedata.filter(t => t >= time && t <= time + rate).length;
         sampled.push({count: count, time: time});
-      }
+      }*/
+      const sampled = this.getSampledData();
 
       const max = Math.max.apply(null, sampled.map(s => s.count));
 
@@ -90,6 +89,25 @@ class FramesTimeline extends HTMLElement
         rect.style.opacity = (sample.count / max).toString(10);
       }
     }
+  }
+
+  getSampledData()
+  {
+    const rate = (this.end - this.start) / this.width; // Move about 1px per sample
+
+    const sampled = [];
+    let currentSample;
+
+    for(let i = 0; i < this.framedata.length; i++)
+    {
+      if(!currentSample || this.framedata[i] > currentSample.time + rate )
+      {
+        currentSample = { count: 0, time: this.framedata[i] };
+        sampled.push(currentSample);
+      }
+      currentSample.count++;
+    }
+    return sampled;
   }
 
   set data(data)
